@@ -1,6 +1,11 @@
 const calculatePricesBtn = document.getElementById('calculate');
 const totalCartValue = document.querySelector('#total-value span');
 const removeBtns = document.querySelectorAll(".btn.btn-remove");
+const createBtn = document.querySelector("#create")
+const tFoot = document.querySelector("tfoot");
+let tBody = document.querySelector("tbody"); //add (append) new products to this
+const newProductNameInput = document.querySelector("#new-product-name");
+const newProductPriceInput = document.querySelector("#new-product-price");
 
 // ITERATION 1
 
@@ -75,13 +80,50 @@ function removeProduct(event) {
 // ITERATION 5
 
 function createProduct() {
-  //... your code goes here
+  console.log("create btn is clicked")
+  //target the name DOM node - done
+  //extract value - done
+  //target the unit price input DOM node - done
+  //extract value - done
+  //add a new row to the table
+    //create element
+    let newProduct = document.createElement("tr");
+    newProduct.classList.add("product");
+    //add HTML content inside
+    newProduct.innerHTML = `
+              <td class="name">
+                <span>${newProductNameInput.value}</span>
+              </td>
+
+              <td class="price">$<span>${newProductPriceInput.value}</span></td>
+
+              <td class="quantity">
+                <input type="number" value="0" min="0" placeholder="Quantity" />
+              </td>
+              
+              <td class="subtotal">$<span>0</span></td>
+              
+              <td class="action">
+                <button class="btn btn-remove">Remove</button>
+              </td>
+    `
+    //append the row to the table
+    tBody.appendChild(newProduct);
+
+  //clear input fields in the creation form
+  newProductNameInput.value = "";
+  newProductPriceInput.value = "";
+  //remove button is not working because it's been created AFTER the window is loaded
+  //so we need to add functionalities to the new button
+  const newRemoveBtn = newProduct.querySelector(".btn.btn-remove");
+  console.log(newRemoveBtn);
+  newRemoveBtn.addEventListener("click", removeProduct);
 }
 
 window.addEventListener('load', () => {
   calculatePricesBtn.addEventListener('click', calculateAll);
   removeBtns.forEach(removeBtn => removeBtn.addEventListener("click", removeProduct));
-  
+  createBtn.addEventListener("click", createProduct);
 });
 
   //... your code goes here
