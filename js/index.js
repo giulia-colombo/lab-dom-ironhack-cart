@@ -1,5 +1,6 @@
 const calculatePricesBtn = document.getElementById('calculate');
-const totalCartValue = document.querySelector('#total-value span')
+const totalCartValue = document.querySelector('#total-value span');
+const removeBtns = document.querySelectorAll(".btn.btn-remove");
 
 // ITERATION 1
 
@@ -30,7 +31,8 @@ function calculateAll() {
   // updateSubtotal(singleProduct);
 
   // ITERATION 2
-  const products = document.getElementsByClassName("product");
+  const products = document.getElementsByClassName("product"); //USE QUERYSELECTORALL instead and forEach after
+  //we cant use forEach on an HTML collection (but on an node collection yes ?)
   let total = 0;
   for (let i = 0; i < products.length; i++) {
     const productSubTotal = ((updateSubtotal(products[i])));
@@ -44,18 +46,30 @@ function calculateAll() {
   totalCartValue.innerText = total;
 
   
- 
 
-  // ITERATION 3
-  //... your code goes here
 }
 
 // ITERATION 4
 
 function removeProduct(event) {
   const target = event.currentTarget;
+  /* currentTarget always refers to the element to which the event handler has been attached
+  (so the removeBtns here)
+  as opposed to Event.target which identifies the element on which the event occurred
+  and which may be its descendant 
+  */
   console.log('The target in remove is:', target);
-  //... your code goes here
+  //we want to access the <td class="product"></td> whose remove btn was clicked
+  const parent = target.parentNode.parentNode.parentNode;
+  const productRow = target.parentNode.parentNode;
+  parent.removeChild(productRow);
+  //make sure total gets updated when removing products from cart
+  //we need to subtract the subtotal for the removed product from the total
+  //get the current total: we already have: totalCartValue
+  //get the subtotal of the product we want to remove (connected to target) 
+  const subtotalProduct = productRow.querySelector(".subtotal span");
+  //subtract and display it in total
+  totalCartValue.innerText -= subtotalProduct.innerText;
 }
 
 // ITERATION 5
@@ -66,6 +80,9 @@ function createProduct() {
 
 window.addEventListener('load', () => {
   calculatePricesBtn.addEventListener('click', calculateAll);
+  removeBtns.forEach(removeBtn => removeBtn.addEventListener("click", removeProduct));
+  
+});
 
   //... your code goes here
-});
+;
